@@ -1,4 +1,4 @@
-let ul = document.querySelector('ul');
+const ul = document.querySelector('ul');
 
 const loading = document.createElement('img');
 loading.src = "img/loading-circle.gif"
@@ -53,7 +53,7 @@ async function writeArray() {
     try {
         const response = await fetch('https://jsondata.okiba.me/v1/json/do9gM210114032953');
         const postsData = await response.json();
-        for (i = 0 ; i < postsData.data.length ; i++) {
+        for (var i = 0 ; i < postsData.data.length ; i++) {
             writeList(postsData.data,i);
         }
 
