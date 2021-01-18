@@ -24,8 +24,10 @@ function getArray() {
 */
 
 function openModal() {
+    document.form.text.value = '';
     modal.classList.add("is-show");
     body.classList.add("no-scroll");
+    document.form.focus();
 }
 
 function closeModal() {
@@ -101,7 +103,6 @@ reqBtn.addEventListener('submit',  function(e) {
     submitTry();
     closeModal();
 });
-
 
 window.addEventListener('click', function(e) {
     if (e.target == modal) {
