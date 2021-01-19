@@ -6,7 +6,11 @@ loading.src = "img/loading-circle.gif"
 const modal = document.querySelector('.modal');
 const body = document.querySelector('body');
 
-const hello = document.createElement('p');
+const p = document.createElement('p');
+const formText = document.form.text;
+
+const openBtn = document.getElementById("open-btn")
+const reqBtn = document.getElementById("req-form");
 
 /* 5で使用
 const array = [
@@ -24,10 +28,10 @@ function getArray() {
 */
 
 function openModal() {
-    document.form.text.value = '';
+    formText.value = '';
     modal.classList.add("is-show");
     body.classList.add("no-scroll");
-    document.form.focus();
+    formText.focus(); //効いていない
 }
 
 function closeModal() {
@@ -35,16 +39,24 @@ function closeModal() {
     body.classList.remove("no-scroll");
 }
 
+function check() {
+    if(formText.value == '') {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 //フォームの値をPromiseで取得
 function getName() {
     return new Promise((resolve, reject) => {
-        resolve(document.form.text.value);
+        resolve(formText.value);
     });
 }
 
 function writeName(str) {
-    hello.innerHTML = `こんにちは、${str}さん。`;
-    ul.before(hello);
+    p.innerHTML = `こんにちは、${str}さん。`;
+    ul.before(p);
 }
 
 function writeLists(array) {
@@ -66,17 +78,7 @@ function writeLists(array) {
 
 
 async function submitTry() {
-    try {
-        let resName = await getName();
-        if (resName == '' ) {
-            return false;
-        }
-        writeName(resName);
-    } catch (err) {
-        console.error(err);
-        ul.innerHTML = 'エラーが発生しました';
-    }
-
+    closeModal();
     ul.innerHTML = '';
     ul.appendChild(loading);
 
@@ -94,14 +96,13 @@ async function submitTry() {
     }
 }
 
-const openBtn = document.getElementById("open-btn")
 openBtn.addEventListener('click', openModal);
 
-const reqBtn = document.getElementById("req-form");
 reqBtn.addEventListener('submit',  function(e) {
     e.preventDefault();
-    submitTry();
-    closeModal();
+    if(check()) {
+        submitTry();
+    }
 });
 
 window.addEventListener('click', function(e) {
