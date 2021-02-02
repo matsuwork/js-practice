@@ -7,31 +7,17 @@ const modal = document.querySelector('.modal');
 const body = document.querySelector('body');
 
 const p = document.createElement('p');
-const formText = document.form.text;
+const formNumber = document.form.number;
+const formName = document.form.text;
 
 const openBtn = document.getElementById("open-btn")
 const reqBtn = document.getElementById("req-form");
 
-/* 5で使用
-const array = [
-    {to: "bookmark.html", img: "1.png", alt:"画像1", text: "ブックマーク"},
-    {to: "message.html", img: "2.png", alt:"画像2", text: "メッセージ"}
-];
-
-function getArray() {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(array);
-        }, 3000);
-    });
-};
-*/
-
 function openModal() {
-    formText.value = '';
+    formNumber.value = '';
+    formName.value = '';
     modal.classList.add("is-show");
     body.classList.add("no-scroll");
-    formText.focus(); //効いていない
 }
 
 function closeModal() {
@@ -39,8 +25,8 @@ function closeModal() {
     body.classList.remove("no-scroll");
 }
 
-function check() {
-    if(formText.value == '') {
+function check(formPart) {
+    if(formPart.value == '') {
         return false;
     } else {
         return true;
@@ -50,13 +36,14 @@ function check() {
 //フォームの値をPromiseで取得
 function getName() {
     return new Promise((resolve, reject) => {
-        resolve(formText.value);
+        resolve(formName.value);
     });
 }
 
-function writeName(str) {
-    p.innerHTML = `こんにちは、${str}さん。`;
-    ul.before(p);
+function getNumber() {
+    return new Promise((resolve, reject) => {
+        resolve(formNumber.value);
+    });
 }
 
 function writeLists(array) {
@@ -76,17 +63,18 @@ function writeLists(array) {
     }
 }
 
-
 async function submitTry() {
     closeModal();
     ul.innerHTML = '';
     ul.appendChild(loading);
 
     try {
+        let resNum = await getNumber();
+        let resName = await getName();
+        console.log(`番号:${resNum}`)
+        console.log(`名前：${resName}`)
         let response = await fetch('https://jsondata.okiba.me/v1/json/do9gM210114032953');
         let resJson = await response.json();
-        let resName = await getName();
-        writeName(resName);
         writeLists(resJson.data);
     } catch (err) {
         console.error(err);
@@ -100,8 +88,12 @@ openBtn.addEventListener('click', openModal);
 
 reqBtn.addEventListener('submit',  function(e) {
     e.preventDefault();
-    if(check()) {
+    if(check(formNumber)&&check(formName)) {
         submitTry();
+    } else if(check(formNumber) == false){
+        alert('番号を入力してください')
+    } else if(check(formName) == false){
+        alert('名前を入力してください')
     }
 });
 
@@ -110,5 +102,3 @@ window.addEventListener('click', function(e) {
         closeModal();
     }
 });
-
-
