@@ -47,20 +47,29 @@ function getNumber() {
 }
 
 function writeLists(array) {
+    let fragment = document.createDocumentFragment();
     for (var i = 0 ; i < array.length ; i++) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        ul.appendChild(li);
+        let img = document.createElement('img');
 
-        let to = array[i].to;
-        let img = array[i].img;
+        let to = array[i].a;
+        let src = array[i].img;
         let alt = array[i].alt;
         let text = array[i].text;
 
         a.href = to;
+        img.src = src;
+        img.alt = alt;
+        img.align = "left";
+
+        a.innerHTML = text;
+        a.appendChild(img);
         li.appendChild(a);
-        a.innerHTML = `<img src="${img}" alt="${alt}">${text}`;
+
+        fragment.appendChild(li)
     }
+    ul.appendChild(fragment)
 }
 
 async function submitTry() {
